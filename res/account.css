@@ -1,0 +1,165 @@
+*{
+	outline:none;
+	word-break:break-word;
+	box-sizing:border-box;
+	font-family:sans-serif;
+}
+body{
+	padding:0;
+	margin:0;
+	color:#363636;
+}
+
+header{
+	width:100%;
+	display:flex;
+	align-items:center;
+	padding:20px;
+	border-bottom:1px solid #e4e4e4;
+}
+
+header div{
+	width:50%;
+}
+header .left {
+	text-align:left;
+}
+
+header .right{
+	text-align:right;
+}
+
+header .right a{
+		font-weight:bold;
+	color:black;
+	text-decoration:none;
+}
+header .left img{
+	width:120px;
+}
+
+
+section{
+	text-align:center;
+}
+
+.form{
+	text-align:left;
+	width:500px;
+	max-width:100%;
+	border-radius:5px;
+	display:inline-block;
+	padding:60px;
+}
+
+.form-title{
+	font-size:1.8em;
+	margin-bottom:26px
+}
+
+.form-col{
+	margin:15px 0;
+}
+
+.form-col span{
+	font-size:0.8em;
+	color:#e77508;
+}
+
+.textinput{
+	width:100%;
+	padding:15px;
+	border:1px solid #c9c9c9;
+	font-size:1em;
+}
+
+.textinput:focus{
+	border:1px solid #5180d5;
+}
+ 
+
+.sbmt{
+	margin-top:15px;
+	width:100%;
+	background:#e50914;
+	padding:15px;
+	border:none;
+	color:white;
+	font-size:1em;
+	border-radius:5px;
+}
+
+
+.otp-window{
+	display:none;
+	width:100%;
+	height:100%;
+	top:0;
+	left:0;
+	position:fixed;
+	background:rgba(0,0,0,0.8);
+}
+
+
+.otp-holder{
+	width:100%;
+	height:100%;
+	display:flex;
+	align-items:center;
+	justify-content:center;
+}
+
+.otp-content{
+	text-align:center;
+	font-size:0.9em;
+	width:600px;
+	max-width:90%;
+	background:white;
+	border-radius:4px;
+	padding:20px 20px;
+	height:400px;
+	display:flex;
+	algin-items:center;
+	justify-content:center;
+}
+
+.otp-content input[type=text]{
+	border:1px solid #c6bfbf;
+	padding:3px;
+
+}
+
+.otp-content button{
+	padding:3px;
+	border:1px solid #d8d4d4;
+	background:#eaeaea;
+	color:#494242;
+}
+
+
+.otp-content a{
+	color:black;
+}
+
+@media screen and (max-width:600px){
+	.form{padding:30px;}		
+}
+
+
+footer{
+	background:#fafafa;
+	margin-top:40px;
+	border-top:1px solid #e4e4e4;
+	padding:30px;
+}
+
+footer select{
+	background:none;
+}
+
+footer a{
+	font-size:0.8em;
+	margin:10px;
+	color:black;
+	text-decoration:none;
+}

